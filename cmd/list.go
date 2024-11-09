@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"todos-app/internal/db"
 	"todos-app/internal/types"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +31,7 @@ func List() {
 	defer result.Close()
 
 	hasRows := false
+	var data [][]string
 
 	for result.Next() {
 		hasRows = true
@@ -40,7 +43,9 @@ func List() {
 			continue
 		}
 
-		fmt.Println(todo.Id, todo.Title, todo.Status, todo.CreatedAt, todo.UpdatedAt)
+		// fmt.Println(todo.Id, todo.Title, todo.Status, todo.CreatedAt, todo.UpdatedAt)
+		row := []string{todo.Id, todo.Title, todo.Status, todo.CreatedAt, todo.UpdatedAt}
+		data = append(data, row)
 	}
 
 	if !hasRows {
@@ -50,4 +55,11 @@ func List() {
 	if err = result.Err(); err != nil {
 		fmt.Println("Error reading rows", err)
 	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Id", "Title", "Status", "CreatedAt", "UpdatedAt"})
+	table.AppendBulk(data)
+	table.SetRowLine(true)
+	table.SetAlignment(1)
+	table.Render()
 }
