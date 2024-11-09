@@ -7,5 +7,8 @@ import (
 
 func main() {
 	db.Init()
+
+	defer db.Close()
+
 	cmd.Execute()
 }

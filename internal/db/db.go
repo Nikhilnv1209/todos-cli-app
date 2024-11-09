@@ -8,13 +8,18 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+// Database connection
+var (
+	Client *sql.DB
+	err    error
+)
+
 func Init() {
-	db, err := sql.Open("sqlite", "todos.db")
+	Client, err = sql.Open("sqlite", "todos.db")
 	if err != nil {
 		fmt.Println("Error creating database")
 		os.Exit(1)
 	}
-	defer db.Close()
 
 	// create table if not exists
 	createTodosTable := `CREATE TABLE IF NOT EXISTS todos (
@@ -26,11 +31,17 @@ func Init() {
   )
   `
 
-	_, err = db.Exec(createTodosTable)
+	_, err = Client.Exec(createTodosTable)
 
 	if err != nil {
 		fmt.Println("Error while creating the table")
 		os.Exit(1)
 	}
 
+}
+
+func Close() {
+	if Client != nil {
+		Client.Close()
+	}
 }
