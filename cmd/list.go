@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 	"todos-app/internal/db"
 	"todos-app/internal/types"
 
@@ -42,6 +43,8 @@ func List() {
 			fmt.Println("error while scanning the row")
 			continue
 		}
+
+		todo.Id = fmt.Sprintf("%s...", strings.Split(todo.Id, "-")[0])
 
 		// fmt.Println(todo.Id, todo.Title, todo.Status, todo.CreatedAt, todo.UpdatedAt)
 		row := []string{todo.Id, todo.Title, todo.Status, todo.CreatedAt, todo.UpdatedAt}

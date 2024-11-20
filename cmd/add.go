@@ -9,18 +9,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var title, status string
+var addTitle, addStatus string
 
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "This will add the todos in the main todo list",
 	Run: func(cmd *cobra.Command, args []string) {
-		if title == "" {
+		if addTitle == "" {
 			fmt.Println("please specify the title for the todos")
 			return
 		}
 
-		status, err := addTodos(title, status)
+		status, err := addTodos(addTitle, addStatus)
 		if err != nil {
 			fmt.Println(err)
 		} else {
@@ -31,7 +31,7 @@ var addCmd = &cobra.Command{
 
 func addTodos(title string, status string) (string, error) {
 	id := uuid.NewString()
-	createdAt := time.Now().Format("2006-01-02 15:04:05")
+	createdAt := time.Now().Format("2006-01-02 03:04:05 PM")
 	updatedAt := createdAt
 
 	insertQuery := `INSERT INTO todos (id, title, status, createdAt, updatedAt) VALUES (?,?,?,?,?)`
@@ -45,6 +45,6 @@ func addTodos(title string, status string) (string, error) {
 }
 
 func init() {
-	addCmd.Flags().StringVarP(&title, "title", "t", "", "Title of the todo")
-	addCmd.Flags().StringVarP(&status, "status", "s", "Pending", "Status for the todos")
+	addCmd.Flags().StringVarP(&addTitle, "title", "t", "", "Title of the todo")
+	addCmd.Flags().StringVarP(&addStatus, "status", "s", "Pending", "Status for the todos")
 }
